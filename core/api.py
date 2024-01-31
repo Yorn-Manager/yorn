@@ -27,8 +27,19 @@ def getConfigContent(repository_name: str):
     response = requests.get(url)
 
     if response.status_code == 200:
-        file_info = response.json()
-        content = base64.b64decode(file_info['content']).decode('utf-8')
+        try:
+            file_info = response.json()
+        except:
+            print("Failed to parse json from output")
+            return None
+        if not file_info.get("content"):
+            print("No \"content\" field in output")
+            return None
+        try:
+            content = base64.b64decode(file_info['content']).decode()
+        except:
+            print("Invalid base64 content in file infos")
+            return None
         return parseYornInfo(content)
     else:
         print(f"Failed to retrieve file content. Status code: {response.status_code}")
