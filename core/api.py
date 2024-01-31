@@ -13,10 +13,9 @@ from .object import *
 def getReleaseRequest(repository_name: str):
     return f"https://api.github.com/repos/{AUTHOR_NAME.lower()}/{repository_name.lower()}/releases"
 
-def getRepositories() :
+def getRepositories(fieldsToExtract = ['name', 'html_url']):
     response = requests.get(URL_ORGANISATION)
-    if response.status_code == 200 :
-        fieldsToExtract = ['name', 'html_url']
+    if response.status_code == 200:
         return [{field: repo.get(field, '') for field in fieldsToExtract} for repo in response.json()]
     else:
         print(f"Failed to get the requested repository. Status code: {response.status_code}")
