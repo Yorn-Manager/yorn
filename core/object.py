@@ -5,6 +5,8 @@
 ** library and template manager
 """
 
+# With what we said, we should not need this class anymore
+# I think that using dictionaries might be what we need/
 class RepositoryInfo:
     def __init__(self, dico: dict):
         self.type = None
