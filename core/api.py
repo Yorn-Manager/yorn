@@ -8,11 +8,13 @@
 from .imports import *
 from .utils import *
 from .configs import *
-from .object import *
 
 # Not sure we need a whole function for that, ey ?
 def getReleaseRequest(repository_name: str):
     return f"https://api.github.com/repos/{AUTHOR_NAME.lower()}/{repository_name.lower()}/releases"
+
+def repoExist(author, repo):
+    return Session().get(f"https://github.com/{author}/{repo}").status_code == 200
 
 def getRepositories(organisation = AUTHOR_NAME, fieldsToExtract=["name", "html_url"], remove_format = [{"full_name": AUTHOR_NAME + "/yorn"}]) -> list[dict]:
     """
