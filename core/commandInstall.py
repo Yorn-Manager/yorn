@@ -4,8 +4,7 @@
 ** File description:
 ** DESCRIPTION
 """
-
-from .imports import *
+import sys
 
 def commandInstall():
     print("function \"commandInstall\" not done.")

@@ -5,8 +5,15 @@
 ** library and template manager
 """
 
-
 from . import *
 
 def main():
-    pass
+    parser = build_parser()
+    args = parser.parse_args()
+
+    if args.command_subparser == "add":
+        commandAdd(args.name, args.version)
+    elif args.command_subparser == "remove":
+        commandRemove(args.name)
+    elif args.command_subparser == "stat":
+        commandStat()

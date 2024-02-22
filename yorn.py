@@ -7,4 +7,5 @@
 
 
 import core
-from core.argument_parser import build_parser
+
+core.main()

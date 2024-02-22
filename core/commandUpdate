@@ -19,11 +19,11 @@ class CommandAddStatus(Enum):
 
     def displayError(status):
         if (status == CommandAddStatus.VERSION_ERROR):
-            print("\n⚠ The library you want to add is already installed but in another version. ⚠\n⚠ Try to use the command \"update\" to update the library. ⚠\n")
+            print(f"\n⚠ The library you want to update is not present in the \"{CONFIG_FILEPATH}\" file. ⚠\n⚠ Try to use the command \"add\" to add the library. ⚠\n")
         elif (status == CommandAddStatus.ALREADY_SET):
-            print("\n⚠ The library you want to add is already installed in the same version. ⚠\n")
+            print("\n⚠ The library you want to update is already installed in the same version. ⚠\n")
         elif (status == CommandAddStatus.LIB_NOT_FOUND):
-            print("\n⚠ The library you want to add isn't an official library. ⚠\n")
+            print("\n⚠ The library you want to update isn't an official library. ⚠\n")
 
 def checkForYornConfig():
     config_filepath = get_config_filepath()
@@ -36,13 +36,16 @@ def checkForYornConfig():
     }, CONFIG_FILEPATH)
 
 
-def addLibraryInConfig(configs: dict, librayName, version) -> bool:
+def updateLibraryInConfig(configs: dict, librayName, version) -> bool:
     if not "dependencies" in configs:
         configs["dependencies"] = {}
     if librayName in configs["dependencies"]:
+        if configs["dependencies"].get(librayName) is None:
+            return CommandAddStatus.VERSION_ERROR
         if configs["dependencies"][librayName].get("version") == version:
             return CommandAddStatus.ALREADY_SET
-        return CommandAddStatus.VERSION_ERROR
+        configs["dependencies"][librayName]["version"] = version
+        return CommandAddStatus.ALL_CLEAR
     if repoExist(AUTHOR_NAME, librayName):
         pass
 
@@ -53,12 +56,12 @@ def addLibraryInConfig(configs: dict, librayName, version) -> bool:
     }
     return CommandAddStatus.ALL_CLEAR
 
-def commandAdd(libraryName, version):
+def commandUpdate(libraryName, version):
     checkForYornConfig()
     config = load_config()
     if (version == "-1"):
         version = get_latest_version_id(libraryName)
-    status = addLibraryInConfig(config, libraryName, version)
+    status = updateLibraryInConfig(config, libraryName, version)
     if (status == CommandAddStatus.ALL_CLEAR):
         save_config(config)
     else:

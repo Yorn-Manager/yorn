@@ -5,15 +5,16 @@
 ## library and template manager
 ##
 
-from .imports import *
+from .configs import *
+import os
 
-def hash_data(data: bytes) -> bytes:
-    """
-    Return hashed data (sha256).
+# def hash_data(data: bytes) -> bytes:
+#     """
+#     Return hashed data (sha256).
 
-    Uses digest (not hexdigest), so you might want to b64 the output if it is for the user to see
-    """
-    return sha256(data).digest()
+#     Uses digest (not hexdigest), so you might want to b64 the output if it is for the user to see
+#     """
+#     return sha256(data).digest()
 
 def fetch_only_those_fields(array: list[dict], *values) -> list[dict]:
     """
@@ -34,3 +35,11 @@ def fetch_only_those_fields(array: list[dict], *values) -> list[dict]:
             if k in element.keys():
                 final[-1][k] = v
     return final
+
+def get_config_filepath():
+    path = os.getcwd()
+    while os.path.dirname(path) != path:
+        if CONFIG_FILEPATH in os.listdir(path):
+            return os.path.join(path, CONFIG_FILEPATH)
+        path = os.path.dirname(path)
+    return None

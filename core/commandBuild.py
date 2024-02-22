@@ -5,7 +5,7 @@
 ** library and template manager
 """
 
-from .imports import *
+import sys
 
 def commandBuild():
     print("function \"commandBuild\" not done.")

@@ -5,35 +5,90 @@
 ** library and template manager
 """
 
-from .imports import *
-
 import argparse
 
 def parse_version(version):
-    try:
-        int(version) == -1
-        return -1
-    except:
-        pass
     if version.count('.') != 2:
         raise argparse.ArgumentTypeError("Given version (\"" + version + "\") does not follow normal version format (\"{release}.{update}.{fix}\")")
     for e in version.split('.'):
-        try:
-            int(e)
-        except:
+        if not e.isnumeric():
             raise argparse.ArgumentTypeError("Given version (\"" + version + "\") is not made of ints !")
     return version
+
+def parse_yorn_type(ytype):
+    if not ytype.lower() in ("project", "library", "template"):
+        raise argparse.ArgumentTypeError("Yorn type must be \"Project\", \"Library\" or \"Template\" !")
+    return ytype.lower()
 
 def build_parser():
     parser = argparse.ArgumentParser()
     subparser = parser.add_subparsers(dest='command_subparser')
-    parser_command_add = subparser.add_parser("add", help="Add a library to the current project")
-    parser_command_add.add_argument("name", type=str, help="Name of the library to add. Non-official libraries must be prepended by \"github.com/{author_name}/\".")
-    parser_command_add.add_argument("version", type=parse_version, help="Version of the library to add. Use \"-1\" (or leave empty) to use last version.", default=-1)
 
-    parser_command_remove = subparser.add_parser("remove", help="Remove lib from project")
-    parser_command_remove.add_argument("name", type=str, help="Name of the library to remove. Non-official libraries must be prepended by \"github.com/{author_name}/\".")
+    parser_command_add = subparser.add_parser(
+        "add",
+        help="Add a library to the current project"
+    )
+    parser_command_add.add_argument(
+        "-n", "--name",
+        type=str,
+        help="Name of the library to add. Non-official libraries must be prepended by \"github.com/{author_name}/\"."
+    )
+    parser_command_add.add_argument(
+        "-v", "--version",
+        type=parse_version,
+        help="Version of the library to add in the format \"0.0.0\". Leave empty to use last version.",
+        default="-1"
+    )
 
-    
+    parser_command_remove = subparser.add_parser(
+        "remove",
+        help="Remove lib from project"
+    )
+    parser_command_remove.add_argument(
+        "-n", "--name",
+        type=str,
+        help="Name of the library to remove. Non-official libraries must be prepended by \"github.com/{author_name}/\"."
+    )
+
+    parser_command_stat = subparser.add_parser(
+        "stat",
+        help="Give all the information about a library, project, template, etc. based on the \".yorn.info\"."
+    )
+
+    parser_command_init = subparser.add_parser(
+        "init",
+        help="Initialize a project, library, template, etc. with all the required information base on the \".yorn.info\".",
+    )
+
+    parser_command_update = subparser.add_parser(
+        "update",
+        help="Update a library of the current project"
+    )
+    parser_command_update.add_argument(
+        "-n", "--name",
+        type=str,
+        help="Name of the library to update. Non-official libraries must be prepended by \"github.com/{author_name}/\"."
+    )
+    parser_command_update.add_argument(
+        "-v", "--version",
+        type=parse_version,
+        help="Version of the library to update in the format \"0.0.0\". Leave empty to use last version.",
+        default="-1"
+    )
+
+    parser_command_build = subparser.add_parser(
+        "build",
+        help="Importe all the required dependencies to build an executable of the project or a library. This command cannot been used in a template.",
+    )
+
+    parser_command_clean = subparser.add_parser(
+        "clean",
+        help="Remove all the compiled libraries and executables in a project.",
+    )
+
+    parser_command_install = subparser.add_parser(
+        "install",
+        help="Importe all the required dependencies in the current project.",
+    )
 
     return parser

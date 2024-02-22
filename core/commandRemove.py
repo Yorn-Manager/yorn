@@ -5,8 +5,20 @@
 ** library and template manager
 """
 
-from .imports import *
+from .utils import *
+from .configs_interactions import *
 
-def commandRemove():
-    print("function \"commandRemove\" not done.")
-    sys.exit(1)
+def commandRemove(libraryName):
+    config_filepath = get_config_filepath()
+    if config_filepath is None:
+        print("\n⚠ No \".yorn.info\" exist. ⚠\n")
+        return
+    data = load_config(CONFIG_FILEPATH)
+    if not "dependencies" in data:
+        print("\n⚠ \".yorn.info\" file does not contain valid yorn configs. ⚠\n")
+        return
+    if not libraryName in data["dependencies"]:
+        print("\n⚠ The library you want to remove doesn't exist in the \".yorn.info\". ⚠\n")
+        return
+    del data["dependencies"][libraryName]
+    save_config(data, CONFIG_FILEPATH)

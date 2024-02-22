@@ -5,7 +5,7 @@
 ** library and template manager
 """
 
-from .imports import *
+import sys
 
 def commandClean():
     print("function \"commandClean\" not done.")

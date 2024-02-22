@@ -5,9 +5,11 @@
 ## library and template manager
 ##
 
-from .imports import *
+from requests import Session
+from json import loads as jloads
+from base64 import b64decode
+
 from .utils import *
-from .configs import *
 
 # Not sure we need a whole function for that, ey ?
 def getReleaseRequest(repository_name: str):
@@ -77,6 +79,19 @@ def getConfig(repository_name: str):
         return {}
     try:
         if file_info.get("encoding") == "base64":
-            return ploads(b64decode(file_info['content']))
+            return jloads(b64decode(file_info['content']))
     except:
         return {}
+
+def get_latest_version_id(lib_name: str):
+    s = Session()
+    response = s.get(getReleaseRequest(lib_name))
+    if not response.text:
+        return ""
+    try:
+        response.json()
+    except:
+        return ""
+    if not len(response.json()):
+        return ""
+    return response[0].get("tag_name")
