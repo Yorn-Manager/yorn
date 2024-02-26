@@ -59,6 +59,42 @@ def build_parser():
         "init",
         help="Initialize a project, library, template, etc. with all the required information base on the \".yorn.info\".",
     )
+    parser_command_init.add_argument(
+        "-n", "--name",
+        type=str,
+        help="Name of the project to generate",
+        default=""
+    )
+    parser_command_init.add_argument(
+        "-t", "--type",
+        type=str,
+        help="Type of the project to generate",
+        default=""
+    )
+    parser_command_init.add_argument(
+        "-d", "--description",
+        type=str,
+        help="Description of the project to generate",
+        default=""
+    )
+    parser_command_init.add_argument(
+        "-l", "--language",
+        type=str,
+        help="Language used on the project",
+        default=""
+    )
+    parser_command_init.add_argument(
+        "-b", "--template",
+        type=str,
+        help="Template used for the project",
+        default=""
+    )
+    parser_command_init.add_argument(
+        "-i", "--interactive",
+        type=bool,
+        help="Use interactive mode to fill the required information",
+        default=False
+    )
 
     parser_command_update = subparser.add_parser(
         "update",

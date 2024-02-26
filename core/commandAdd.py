@@ -7,6 +7,7 @@
 
 from enum import Enum
 
+from .cli import *
 from .api import *
 from .utils import *
 from .configs_interactions import *
@@ -19,22 +20,18 @@ class CommandAddStatus(Enum):
 
     def displayError(status):
         if (status == CommandAddStatus.VERSION_ERROR):
-            print("\n⚠ The library you want to add is already installed but in another version. ⚠\n⚠ Try to use the command \"update\" to update the library. ⚠\n")
+            print_error("The library you want to add is already installed but in another version.\nTry to use the command \"update\" to update the library.")
         elif (status == CommandAddStatus.ALREADY_SET):
-            print("\n⚠ The library you want to add is already installed in the same version. ⚠\n")
+            print_error("The library you want to add is already installed in the same version.")
         elif (status == CommandAddStatus.LIB_NOT_FOUND):
-            print("\n⚠ The library you want to add isn't an official library. ⚠\n")
+            print_error("The library you want to add isn't an official library.")
 
 def checkForYornConfig():
     config_filepath = get_config_filepath()
     if config_filepath != None:
-        return
-    print(f"⚠ No \"{CONFIG_FILEPATH}\" found in this folder and parent ones. Creating... ⚠")
-    save_config({
-        "important": "⚠ This file is an auto generated file, do not modify it ! ⚠",
-        "dependencies": []
-    }, CONFIG_FILEPATH)
-
+        return True
+    print_error(f"No \"{CONFIG_FILEPATH}\" found in this folder and parent ones. Exiting...")
+    return False
 
 def addLibraryInConfig(configs: dict, librayName, version) -> bool:
     if not "dependencies" in configs:
@@ -54,7 +51,8 @@ def addLibraryInConfig(configs: dict, librayName, version) -> bool:
     return CommandAddStatus.ALL_CLEAR
 
 def commandAdd(libraryName, version):
-    checkForYornConfig()
+    if not checkForYornConfig():
+        return
     config = load_config()
     if (version == "-1"):
         version = get_latest_version_id(libraryName)

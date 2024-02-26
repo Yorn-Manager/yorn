@@ -7,6 +7,7 @@
 
 from enum import Enum
 
+from .cli import *
 from .api import *
 from .utils import *
 from .configs_interactions import *
@@ -19,21 +20,18 @@ class CommandAddStatus(Enum):
 
     def displayError(status):
         if (status == CommandAddStatus.VERSION_ERROR):
-            print(f"\n⚠ The library you want to update is not present in the \"{CONFIG_FILEPATH}\" file. ⚠\n⚠ Try to use the command \"add\" to add the library. ⚠\n")
+            print_error(f"The library you want to update is not present in the \"{CONFIG_FILEPATH}\" file.\nTry to use the command \"add\" to add the library.")
         elif (status == CommandAddStatus.ALREADY_SET):
-            print("\n⚠ The library you want to update is already installed in the same version. ⚠\n")
+            print_error("The library you want to update is already installed in the same version.")
         elif (status == CommandAddStatus.LIB_NOT_FOUND):
-            print("\n⚠ The library you want to update isn't an official library. ⚠\n")
+            print_error("The library you want to update isn't an official library.")
 
 def checkForYornConfig():
     config_filepath = get_config_filepath()
     if config_filepath != None:
-        return
-    print(f"⚠ No \"{CONFIG_FILEPATH}\" found in this folder and parent ones. Creating... ⚠")
-    save_config({
-        "important": "⚠ This file is an auto generated file, do not modify it ! ⚠",
-        "dependencies": []
-    }, CONFIG_FILEPATH)
+        return True
+    print_error(f"No \"{CONFIG_FILEPATH}\" found in this folder and parent ones. Exiting...")
+    return False
 
 
 def updateLibraryInConfig(configs: dict, librayName, version) -> bool:
@@ -57,7 +55,8 @@ def updateLibraryInConfig(configs: dict, librayName, version) -> bool:
     return CommandAddStatus.ALL_CLEAR
 
 def commandUpdate(libraryName, version):
-    checkForYornConfig()
+    if not checkForYornConfig():
+        return
     config = load_config()
     if (version == "-1"):
         version = get_latest_version_id(libraryName)
