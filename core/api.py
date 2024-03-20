@@ -79,7 +79,7 @@ def getConfig(repository_name: str):
         return {}
     try:
         if file_info.get("encoding") == "base64":
-            return jloads(b64decode(file_info['content']))
+            return jloads(b64decode(file_info['content'].replace('\n', '').encode()))
     except:
         return {}
 

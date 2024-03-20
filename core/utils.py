@@ -42,4 +42,6 @@ def get_config_filepath():
         if CONFIG_FILEPATH in os.listdir(path):
             return os.path.join(path, CONFIG_FILEPATH)
         path = os.path.dirname(path)
+    if CONFIG_FILEPATH in os.listdir(path):
+        return os.path.join(path, CONFIG_FILEPATH)
     return None
