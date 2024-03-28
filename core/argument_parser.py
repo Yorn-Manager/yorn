@@ -84,15 +84,9 @@ def build_parser():
         default=""
     )
     parser_command_init.add_argument(
-        "-b", "--template",
-        type=str,
-        help="Template used for the project",
-        default=""
-    )
-    parser_command_init.add_argument(
         "-i", "--interactive",
-        type=bool,
         help="Use interactive mode to fill the required information",
+        action='store_true',
         default=False
     )
 

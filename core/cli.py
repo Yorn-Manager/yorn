@@ -22,6 +22,39 @@ from rich.panel import Panel
 from rich.align import Align
 from rich.table import Table
 
+from rich.live import Live
+
+from queue import Queue, Empty
+from threading import Thread
+
+import subprocess
+import requests
+import shlex
+import os
+
+def wget(url: str, file):
+    if output == None:
+        output = os.getcwd()
+    if filename == None:
+        filename = url.split('/')[-1]
+    p = Panel("", border_style="blue", title="[white]"+filename, title_align="left")
+    response = requests.get(url, stream=True)
+    total_length = response.headers.get('content-length')
+
+    if total_length is None:
+        file.write(response.content)
+    else:
+        dl = 0
+        total_length = int(total_length)
+        with Live(p, refresh_per_second=20):
+            for data in response.iter_content(chunk_size=4096):
+                tsize, _ = os.get_terminal_size()
+                tsize -= 6
+                dl += len(data)
+                file.write(data)
+                done = int(tsize * dl / total_length)
+                p.renderable = Align(f"[{'=' * done}{' ' * (tsize - done)}]", "center")
+
 def print_error(error, title=""):
     title = '⚠' + ((f" {title} ⚠") if (title != "") else "")
     print(Panel(Align(error, "center"), title=title, title_align="left", border_style="red"))
@@ -68,6 +101,25 @@ def table_from_dict_or_list(lst, level=0):
             else:
                 t.add_row(k, v)
     return t
+
+def fill_in_queue(out, queue):
+    for line in iter(out.readline, b''):
+        queue.put(line)
+    out.close()
+
+def run_command(command):
+    p = Panel("", border_style="red", title="[white]"+command, title_align="left")
+    scommand = shlex.split(command)
+    process = subprocess.Popen(scommand, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    q = Queue()
+    Thread(target=fill_in_queue, args=(process.stdout, q), daemon=True).start()
+    Thread(target=fill_in_queue, args=(process.stderr, q), daemon=True).start()
+    with Live(p, refresh_per_second=20):
+        while process.poll() is None:
+            try:
+                p.renderable += q.get_nowait().decode()
+            except Empty:
+                pass
 
 ## ----------------------------------------------------------------------------------- ##
 ##                                                                                     ##

@@ -21,9 +21,12 @@ JSON
             "version": "version",
         }
     ],
-    "build": "make" // build command
-    "export_files": [ // those will be set on the folder ".yornlibs" of the building repo. No sub-directories
+    "build": "make", // build command
+    "build_flags": "-llibname",
+    "build_files": [ // Those are built files, to be cloned on the target project
         "liblibname.a",
+    ],
+    "export_files": [ // those will be set on the folder ".yorn.build" of the building repo. No sub-directories
         "includes/headers.h"
     ]
 }
@@ -49,5 +52,5 @@ JSON
     "type": "project",
     "dependencies": [
         
-    ]
+    ],
 }

@@ -12,8 +12,8 @@ from base64 import b64decode
 from .utils import *
 
 # Not sure we need a whole function for that, ey ?
-def getReleaseRequest(repository_name: str):
-    return f"https://api.github.com/repos/{AUTHOR_NAME.lower()}/{repository_name.lower()}/releases"
+def getReleaseRequest(repository_name: str, author = AUTHOR_NAME):
+    return f"https://api.github.com/repos/{author.lower()}/{repository_name.lower()}/releases"
 
 def repoExist(author, repo):
     return Session().get(f"https://github.com/{author}/{repo}").status_code == 200
@@ -83,9 +83,9 @@ def getConfig(repository_name: str):
     except:
         return {}
 
-def get_latest_version_id(lib_name: str):
+def get_latest_version_id(lib_name: str, author = AUTHOR_NAME):
     s = Session()
-    response = s.get(getReleaseRequest(lib_name))
+    response = s.get(getReleaseRequest(lib_name, author))
     if not response.text:
         return ""
     try:

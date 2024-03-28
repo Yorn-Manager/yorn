@@ -18,4 +18,4 @@ def main():
     elif args.command_subparser == "stat":
         commandStat()
     elif args.command_subparser == "init":
-        commandInit(args.name, args.type, args.description, args.language, args.template, args.interactive)
+        commandInit(args.name, args.type, args.description, args.language, args.interactive)
