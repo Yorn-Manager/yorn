@@ -36,3 +36,11 @@ def save_config(data: dict, filepath=None):
         f.write(jdumps(data, indent=4))
     os.chmod(filepath, 400) # Lock
     # This "locking" mechanisme isn't perfect, but it kinda works :eyes:
+
+def create_config(data: dict):
+    filepath = "./.yorn.config"
+    if os.path.isfile(filepath):
+        return
+    with open(filepath, 'w+') as f:
+        f.write(jdumps(data, indent=4))
+    os.chmod(filepath, 400)

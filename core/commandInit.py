@@ -9,6 +9,7 @@ import sys
 
 from rich.prompt import Confirm
 from .cli import *
+from .configs_interactions import *
 
 languagePossibility = ["C", "C++"]
 typePossibility = ["library", "project"]
@@ -73,7 +74,6 @@ def interactive_mode(name, type, description, language):
             sys.exit(84)
 
     values = {"name": name, "type": type, "description": description, "language": language}
-    print(values)
     return values
 
 
@@ -91,12 +91,13 @@ def non_interactive_mode(name, type, description, language):
         sys.exit(84)
 
     values = {"name": name, "type": type, "description": description, "language": language}
-    print(values)
     return values
 
 
 def commandInit(name, type, description, language, interactive):
+    values = {}
     if (interactive):
-        interactive_mode(name, type, description, language)
+        values = interactive_mode(name, type, description, language)
     else:
-        non_interactive_mode(name, type, description, language)
+        values = non_interactive_mode(name, type, description, language)
+    create_config(values)
