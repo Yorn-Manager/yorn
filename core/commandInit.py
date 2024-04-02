@@ -73,7 +73,7 @@ def interactive_mode(name, type, description, language):
         if not Confirm.ask("Continue", default=True):
             sys.exit(84)
 
-    values = {"name": name, "type": type, "description": description, "language": language}
+    values = {"name": name, "type": type, "description": description, "language": language, "dependencies": []}
     return values
 
 
@@ -90,7 +90,7 @@ def non_interactive_mode(name, type, description, language):
         print_error("Error: Language not recognized.\nLanguage must be one of the following: " + str(languagePossibility))
         sys.exit(84)
 
-    values = {"name": name, "type": type, "description": description, "language": language}
+    values = {"name": name, "type": type, "description": description, "language": language, "dependencies": []}
     return values
 
 

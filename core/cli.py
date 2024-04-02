@@ -33,11 +33,7 @@ import shlex
 import os
 
 def wget(url: str, file):
-    if output == None:
-        output = os.getcwd()
-    if filename == None:
-        filename = url.split('/')[-1]
-    p = Panel("", border_style="blue", title="[white]"+filename, title_align="left")
+    p = Panel("", border_style="blue", title="[white]Downloading...", title_align="left")
     response = requests.get(url, stream=True)
     total_length = response.headers.get('content-length')
 

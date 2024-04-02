@@ -34,20 +34,24 @@ def checkForYornConfig():
     return False
 
 def addLibraryInConfig(configs: dict, librayName, version) -> bool:
+    if not librayName.count('/') in (0, 1):
+        print_error(f"Library name not valid !\nAwaiting 0 or 1 '/', but got {librayName.count('/')}")
+        return CommandAddStatus.LIB_NOT_FOUND
     if not "dependencies" in configs:
-        configs["dependencies"] = {}
-    if librayName in configs["dependencies"]:
-        if configs["dependencies"][librayName].get("version") == version:
-            return CommandAddStatus.ALREADY_SET
-        return CommandAddStatus.VERSION_ERROR
-    if repoExist(AUTHOR_NAME, librayName):
-        pass
+        configs["dependencies"] = []
+    for dep in configs["dependencies"]:
+        if dep.get("name") == librayName:
+            if dep.get("version") == version:
+                return CommandAddStatus.ALREADY_SET
+            return CommandAddStatus.VERSION_ERROR
+    if not repoExist((AUTHOR_NAME if librayName.count('/') != 1 else librayName.split('/')[0]), (librayName if librayName.count('/') == 0 else librayName.split('/')[1])):
+        print_error("Library does not exists !\nCould not find the required library on github !")
+        return CommandAddStatus.LIB_NOT_FOUND
 
-    configs["dependencies"][librayName] = {
+    configs["dependencies"].append({
+        "name": librayName,
         "version": version,
-        "dependencies": [],
-        "source": ""
-    }
+    })
     return CommandAddStatus.ALL_CLEAR
 
 def commandAdd(libraryName, version):

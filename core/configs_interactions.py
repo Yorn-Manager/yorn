@@ -22,25 +22,22 @@ def load_config(filepath=None) -> dict:
     try:
         with open(filepath, 'r') as f:
             return jloads(f.read())
-    except:
+    except Exception as e:
+        print(e)
         return {}
 
 def save_config(data: dict, filepath=None):
-    # TODO: Add chmod w and remove it after
     if filepath is None:
         filepath = get_config_filepath()
     if filepath is None:
         filepath = CONFIG_FILEPATH
-    os.chmod(filepath, 600) # Unlock
     with open(filepath, 'w+') as f:
         f.write(jdumps(data, indent=4))
-    os.chmod(filepath, 400) # Lock
     # This "locking" mechanisme isn't perfect, but it kinda works :eyes:
 
 def create_config(data: dict):
-    filepath = "./.yorn.config"
+    filepath = f"./{CONFIG_FILEPATH}"
     if os.path.isfile(filepath):
         return
     with open(filepath, 'w+') as f:
         f.write(jdumps(data, indent=4))
-    os.chmod(filepath, 400)

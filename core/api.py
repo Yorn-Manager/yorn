@@ -63,7 +63,7 @@ def getRepositories(organisation = AUTHOR_NAME, fieldsToExtract=["name", "html_u
         return [] # No need to debug here, we will check if the output of getRepositories is {}, and so, we will know the required package is void
 
 def getConfig(repository_name: str):
-    url = f"https://api.github.com/repos/{AUTHOR_NAME.lower()}/{repository_name.lower()}/contents/.yorn.info"
+    url = f"https://api.github.com/repos/{AUTHOR_NAME.lower()}/{repository_name.lower()}/contents/" + CONFIG_FILEPATH
     s = Session()
     response = s.get(url)
 

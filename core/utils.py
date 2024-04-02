@@ -25,7 +25,6 @@ def fetch_only_those_fields(array: list[dict], *values) -> list[dict]:
     ```py
     fetch_only_those_fields(dico, field1, field2, field3...)
     ```
-
     Kind of a va_list, ey
     """
     final = []

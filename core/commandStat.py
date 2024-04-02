@@ -12,7 +12,7 @@ from .configs_interactions import *
 def commandStat():
     config_filepath = get_config_filepath()
     if config_filepath is None:
-        print_error("No \".yorn.info\" exist.")
+        print_error(f"No \"{CONFIG_FILEPATH}\" exist.")
         return
     data = load_config(CONFIG_FILEPATH)
     t = table_from_dict_or_list(data)

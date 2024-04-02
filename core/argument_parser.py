@@ -6,6 +6,7 @@
 """
 
 import argparse
+from .configs import *
 
 def parse_version(version):
     if version.count('.') != 2:
@@ -52,12 +53,12 @@ def build_parser():
 
     parser_command_stat = subparser.add_parser(
         "stat",
-        help="Give all the information about a library, project, template, etc. based on the \".yorn.info\"."
+        help=f"Give all the information about a library, project, template, etc. based on the \"{CONFIG_FILEPATH}\"."
     )
 
     parser_command_init = subparser.add_parser(
         "init",
-        help="Initialize a project, library, template, etc. with all the required information base on the \".yorn.info\".",
+        help=f"Initialize a project, library, template, etc. with all the required information base on the \"{CONFIG_FILEPATH}\".",
     )
     parser_command_init.add_argument(
         "-n", "--name",

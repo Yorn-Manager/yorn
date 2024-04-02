@@ -19,3 +19,5 @@ def main():
         commandStat()
     elif args.command_subparser == "init":
         commandInit(args.name, args.type, args.description, args.language, args.interactive)
+    elif args.command_subparser == "build":
+        commandBuild()
