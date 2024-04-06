@@ -15,8 +15,8 @@ from .configs_interactions import *
 class CommandAddStatus(Enum):
     VERSION_ERROR = 0
     ALREADY_SET = 1
-    LIB_NOT_FOUND = 1
-    ALL_CLEAR = 2
+    LIB_NOT_FOUND = 2
+    ALL_CLEAR = 3
 
     def displayError(status):
         if (status == CommandAddStatus.VERSION_ERROR):
